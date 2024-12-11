@@ -43,13 +43,6 @@ export class BattleComponent {
   hudOptions: string[] = ['skills', 'attack']
   activeHudOption: string = this.hudOptions[0]
 
-  playerDamageNumbers: number[][] = []
-  enemyDamageNumbers: number[][] = []
-
-  playerHealNumbers: number[][] = []
-  enemyHealNumbers: number[][] = []
-
-  blinkTargets: Set<Character> = new Set()
 
   constructor(private router: Router, public gameService: GameService, private cdr: ChangeDetectorRef) {
     const navigation = this.router.getCurrentNavigation()
@@ -79,12 +72,6 @@ export class BattleComponent {
 
       this.turnOrder = [...this.enemies, ...this.allies].sort((a, b) => b.speed - a.speed)
       this.displayedTurnOrder = this.turnOrder
-
-      this.playerDamageNumbers = this.allies.map(() => [])
-      this.playerHealNumbers = this.allies.map(() => [])
-
-      this.enemyDamageNumbers = this.enemies.map(() => [])
-      this.enemyHealNumbers = this.enemies.map(() => [])
 
     } else {
       //No data passed to the Battle component. Redirecting to Missions.
@@ -180,8 +167,8 @@ export class BattleComponent {
     console.log('STATE - execute action')
     // Logic to execute the chosen action
 
-    console.log('Skill:', this.chosenSkill)
-    console.log('Target:', this.target)
+    // console.log('Skill:', this.chosenSkill)
+    // console.log('Target:', this.target)
 
     if(this.chosenSkill === null || this.target === null) {
       console.log("No target or skill")
@@ -191,6 +178,7 @@ export class BattleComponent {
     let skill = this.chosenSkill
     let target = this.target
 
+
     if (skill.target === 'enemy') this.useSkill([target], skill)
 
     if (skill.target === 'enemyTeam') this.useSkill(this.aliveEnemies, skill)
@@ -199,7 +187,7 @@ export class BattleComponent {
 
     if (skill.target === 'team') this.useSkill(this.aliveAllies, skill)
 
-    await wait(1)
+    await wait(1.3)
     this.gameService.setState(GameState.CheckBattleOver);
   }
 
@@ -215,8 +203,8 @@ export class BattleComponent {
   }
 
   onTargetSelected(target: any): void {
-    console.log('Skill:', this.chosenSkill);
-    console.log('Target:', target);
+    // console.log('Skill:', this.chosenSkill);
+    // console.log('Target:', target);
 
     this.target = target
 
@@ -224,79 +212,7 @@ export class BattleComponent {
   }
 
 
-  async nextTurn(): Promise<void> {
 
-    if (this.isBattleFinished()){
-      console.log('battle is finished')
-      if(this.aliveEnemies.length === 0) {
-        this.battleIndex += 1
-        console.log(this.battles[this.battleIndex])
-        if(this.battles[this.battleIndex]){
-          this.enemies = this.battles[this.battleIndex].enemies
-          this.turnOrder = [...this.enemies, ...this.allies].sort((a, b) => b.speed - a.speed)
-          this.displayedTurnOrder = this.turnOrder
-          this.turnIndex = -1
-
-          this.enemyDamageNumbers = this.enemies.map(() => [])
-          this.enemyHealNumbers = this.enemies.map(() => [])
-
-          this.nextTurn()
-        }
-      } else {
-        // this.refreshComponent()
-        return;
-      }
-      
-    }
-    
-    do {
-      this.turnIndex = (this.turnIndex + 1) % this.turnOrder.length
-    } while (this.currentTurn.currentHp <= 0)
-
-    this.updateDisplayedTurnOrder(this.turnOrder)
-    reduceCooldowns(this.currentTurn)
-
-    await this.processStatusEffects(this.currentTurn)
-    // if(this.currentTurn.currentHp <= 0){
-    //   this.currentTurn.statusEffects = []
-    //   this.nextTurn()
-    //   return
-    // }
-    
-    if (!this.currentTurn.isEnemy) {
-      
-      
-      this.selectedSkill = null
-      
-
-      console.log(`It's ${this.currentTurn.name}'s turn. Choose an action.`)
-      
-      
-    } else {
-      // @TODO: enemy action - move to separate function
-      this.setActiveSkill(this.currentTurn)
-      let enemySkill = this.currentTurn.skills.find(s => s.selected === true)
-
-      if (enemySkill!.type === 'damage'){
-
-        if (enemySkill!.target === 'enemy') {
-          const target = this.allies.find((ally) => ally.currentHp > 0)
-          this.useSkill([target!], enemySkill!)
-        }
-
-        if (enemySkill!.target === 'enemyTeam'){
-          let aliveAlies = this.allies.filter(a => a.currentHp > 0)
-          this.useSkill(aliveAlies, enemySkill!)
-        }
-
-      }
-  
-      await wait(1.5)
-      this.nextTurn()
-    }
-
-    
-  }
 
 
   setActiveSkill(character: Character): void{
@@ -385,10 +301,11 @@ export class BattleComponent {
       let isCriticalHit = Math.random() * 100 < critChance;
       let finalDamage = isCriticalHit ? Math.floor(value * 1.5) : value
 
+      target.hpChange = finalDamage
       target.currentHp = Math.max(target.currentHp - finalDamage, 0)
 
       if(target.currentHp <= 0){
-        target.statusEffects = []
+        // target.statusEffects = []
         // this.nextTurn()
       }
 
@@ -403,7 +320,7 @@ export class BattleComponent {
     console.log(this.currentTurn.name, ' recovers CP')
     this.currentTurn.currentCp = Math.min(this.currentTurn.maxCp, this.currentTurn.currentCp + Math.floor(this.currentTurn.maxCp * 0.2))
     await this.dealDamage(target, this.currentTurn.baseDmg, this.currentTurn.critChance)
-    if(!this.currentTurn.isEnemy) this.nextTurn()
+    
   }
 
   

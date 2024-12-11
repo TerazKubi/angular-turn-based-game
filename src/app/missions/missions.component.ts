@@ -29,7 +29,7 @@ export class MissionsComponent {
         {name: "healTeam", value: 5, cooldown: 5, currentCooldown: 0, type: 'heal', target: 'team', cost: 20, costType: 'cp',},
         {name: "healself", value: 10, cooldown: 5, currentCooldown: 0, type: 'heal', target: 'self', cost: 20, costType: 'cp',},
         {name: "fireBall", value: 10, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemy', cost: 20, costType: 'cp',},
-        {name: "fireExplosion", value: 10, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp'},
+        {name: "fireExplosion", value: 50, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp'},
         
       ]
     },
@@ -40,7 +40,7 @@ export class MissionsComponent {
           effect: {name: "burn2", duration: 3, value: 5, type: 'damage'}
         },
         {name: "fireFlame", value: 15, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp',},
-        {name: "electroStrike", value: 30, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp',}
+        {name: "electroStrike", value: 40, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp',}
         
       ]
     }

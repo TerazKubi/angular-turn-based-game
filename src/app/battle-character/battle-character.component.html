@@ -13,7 +13,7 @@
     <div class="name">
         {{ character.name }}
     </div>
-    <div class="hpContainer">
+    <div *ngIf="character.currentHp > 0" class="hpContainer">
         <div class="maxHpBar">
             <div class="currentHpBar" 
                 [ngStyle]="{'width': getHpBarWidth() + '%' }"
@@ -27,7 +27,7 @@
                 [ngStyle]="{'width': getCpBarWidth() + '%' }"
                 ></div>
         </div>
-        <div>{{ character.currentHp }} / {{ character.maxHp}}</div>
+        <div>{{ character.currentCp }} / {{ character.maxCp}}</div>
     </div>
 
     
@@ -35,6 +35,11 @@
         <div *ngFor="let effect of character.statusEffects">
             {{ effect.name }} ({{ effect.duration }})
         </div>
+    </div>
+
+    <div class="numbers-container">
+        <span *ngFor="let dmgValue of damageNumbers" class="number damage-number">{{ dmgValue }}</span>
+        <span *ngFor="let healValue of healNumbers" class="number heal-number">{{ healValue }}</span>
     </div>
 
     

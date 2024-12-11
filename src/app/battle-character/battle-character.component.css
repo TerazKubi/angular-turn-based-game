@@ -57,7 +57,38 @@
     height: 50px; */
 }
 
+.numbers-container{
 
+}
+
+.heal-number{
+
+}
+
+.number {
+    position: absolute;
+    font-size: 16px;
+    font-weight: bold;
+    animation: riseAndFade 1s ease-out forwards;
+}
+
+.heal-number{
+    color: green;
+}
+.damage-number{
+    color: red;
+}
+
+@keyframes riseAndFade {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
 
 
 .selectAsTarget:hover{

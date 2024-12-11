@@ -29,19 +29,28 @@ export class BattleCharacterComponent {
   constructor(private gameService: GameService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    
+    console.log('change')
     const change = changes['currentHp']
-    if (change && change.previousValue && change.currentValue) {
+
+    if(!change) return
+
+    if (change.previousValue !== null && change.currentValue !== null &&
+      change.previousValue !== undefined && change.currentValue !== undefined) {
       
       console.log('HP changed: ', 'from', change.previousValue, 'to', change.currentValue);
       
       const diffValue = change.previousValue - change.currentValue
-
+      console.log("Dif value: ",diffValue)
       if (diffValue > 0) {
         console.log('damage')
         this.triggerBlink()
+        if(this.character.hpChange) this.showNumberAnimation(this.character.hpChange * -1, this.damageNumbers)
+        // if(this.character.currentHp < 0) this.character.currentHp = 0
       }
-      if (diffValue < 0) console.log('heal')
+      if (diffValue < 0) {
+        console.log('heal')
+        this.showNumberAnimation(diffValue * -1, this.healNumbers)
+      }
     }
   }
 
@@ -112,11 +121,12 @@ export class BattleCharacterComponent {
     }, 300); // Match the duration of the CSS animation
   }
 
-  showDamageNumber(number: number): void {
-    this.damageNumbers.push(number)
+  showNumberAnimation(number: number, numbers: number[]): void {
+    numbers.push(number)
 
     setTimeout(() => {
-      this.damageNumbers.shift()
+      numbers.shift()
     }, 1000)
   }
+
 }

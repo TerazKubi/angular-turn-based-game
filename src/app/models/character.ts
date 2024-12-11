@@ -10,6 +10,7 @@ export interface Character {
     isEnemy: boolean
     skills: Skill[]
     statusEffects: StatusEffect[]
+    hpChange?: number
 }
 
 export interface Skill {
