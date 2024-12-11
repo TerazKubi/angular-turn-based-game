@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "name": "Mission 1",
+        "exp": 100,
+        "battles": [
+            {
+                "enemies": [
+                    { "name": "Goblin", "maxHp": 100, "baseDmg": 15, "speed": 10, "critChance": 2, "skills": [
+                        {"name": "Fire ball", "value": 30, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
+                    ]}
+                ]
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Mission 2",
+        "exp": 150,
+        "battles": [
+            {
+                "enemies": [
+                    { "name": "Goblin", "maxHp": 100, "baseDmg": 15, "speed": 10, "critChance": 2, "skills": [
+                        {"name": "Fire ball", "value": 30, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
+                    ]},
+                    { "name": "Goblin", "maxHp": 100, "baseDmg": 15, "speed": 10, "critChance": 2, "skills": [
+                        {"name": "Fire ball", "value": 30, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
+                    ]}
+                ]
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Mission 3",
+        "exp": 250,
+        "battles": [
+            {
+                "enemies": [
+                    { "name": "Goblin1", "maxHp": 100, "baseDmg": 15, "speed": 10, "critChance": 2, "skills": [
+                        {"name": "Fire ball", "value": 30, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
+                    ]}
+                ]
+            },
+            {
+                "enemies": [
+                    { "name": "Goblin2", "maxHp": 100, "baseDmg": 15, "speed": 10, "critChance": 2, "skills": [
+                        {"name": "Fire ball", "value": 30, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
+                    ]},
+                    { "name": "Goblin3", "maxHp": 100, "baseDmg": 15, "speed": 10, "critChance": 2, "skills": [
+                        {"name": "Fire ball", "value": 30, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
+                    ]}
+                ]
+            }
+        ]
+    }
+]

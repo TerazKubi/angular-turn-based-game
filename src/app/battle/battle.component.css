@@ -1,0 +1,151 @@
+.turnOrderContainer{
+    display: flex;
+}
+.turnOrderContainer div{
+    border: 1px solid black;
+    margin-right: 10px;
+
+}
+
+.enemiesContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.playerHudContainer{
+    width: 100%;
+    height: 300px;
+    position: absolute;
+    bottom: 0px;
+}
+
+.playersContainer{
+    width: 100%;
+    height: 100px;
+    
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+
+
+
+
+.hud{
+    width: 100%;
+    border: 1px solid red;
+    box-sizing: border-box;
+    height: calc(100% - 50px);
+}
+.hudOptionsContainer{
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid black;
+    display: flex;
+    flex-direction: row;
+}
+.hudOption{
+    width: 100px;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hudOption:hover{
+    cursor: pointer;
+    border: 1px solid green;
+}
+.hudOptionSelected{
+    border: 1px solid green;
+}
+
+
+
+.skillsContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.skill{
+    width: 200px;
+    height: 50px;
+    margin-right: 10px;
+    border: 1px solid black;
+    box-sizing: border-box;
+}
+.skillHover:hover{
+    cursor: pointer;
+    border: 1px solid green;
+}
+.readySkill:hover{
+    border: 1px solid red;
+    cursor: pointer;
+}
+.skillSelected{
+    border: 1px solid green;
+}
+
+.skillDisabled{
+    background-color: rgb(71, 71, 71);
+}
+
+
+.targetsContainer{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+}
+.target{
+    width: 300px;
+    height: 50px;
+    border: 1px solid black;
+
+}
+.hoverTarget:hover {
+    border: 1px solid red;
+    cursor: pointer;
+}
+
+.hoverAllTargets:hover div {
+    border: 1px solid red; /* Example hover effect for all targets */
+    cursor: pointer;
+}
+
+
+.damage-number {
+    position: absolute;
+    font-size: 16px;
+    color: red;
+    font-weight: bold;
+    animation: riseAndFade 1s ease-out forwards;
+}
+.heal-number {
+    position: absolute;
+    font-size: 16px;
+    color: green;
+    font-weight: bold;
+    animation: riseAndFade 1s ease-out forwards;
+}
+
+@keyframes riseAndFade {
+    0% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}
+
+

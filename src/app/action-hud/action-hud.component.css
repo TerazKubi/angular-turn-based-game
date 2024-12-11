@@ -1,0 +1,29 @@
+.hudContainer{
+    width: 100%;
+    border: 1px solid red;
+    box-sizing: border-box;
+    height: 200px;
+    position: absolute;
+    bottom: 0px;
+}
+
+
+.actionsContainer{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.action{
+    width: 100px;
+    height: 50px;
+    box-sizing: border-box;
+    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.skillSelected{
+    border: 1px solid green;
+}

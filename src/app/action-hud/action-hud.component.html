@@ -1,0 +1,35 @@
+<div class="hudContainer">
+    <div class="actionsContainer" *ngIf="!activeAction">
+
+        <!-- <div class="action">Weapon attack</div>
+        <div class="action">Skills</div>
+        <div class="action">Items</div>
+        <div class="action">Meditate</div>
+        <div class="action">Run</div> -->
+        
+        <div *ngFor="let action of battleActions" 
+            class="action"
+            (click)="selectAction(action)">
+            {{ action }}
+        </div>
+        
+        
+
+        <!-- <div *ngFor="let skill of character.skills">
+            {{ skill.name }}
+        </div>  -->
+
+    </div>
+
+    <div class="actionsContainer" *ngIf="activeAction === 'Skills'">
+        <button (click)="selectAction()">Go back</button>
+        <div *ngFor="let skill of character.skills"
+            [ngClass]="{'skillSelected': skill.selected}"
+            class="action"
+            (click)="selectSkill(skill)"
+            >
+            {{ skill.name }}
+        </div>
+    </div>
+
+</div>

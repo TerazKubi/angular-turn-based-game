@@ -1,0 +1,7 @@
+<p>missions works!</p>
+<div class="missions">
+    <h1>Select a Mission</h1>
+    <div *ngFor="let mission of missions" class="mission">
+        <button (click)="startMission(mission.id)">{{ mission.name }}</button>
+    </div>
+</div>

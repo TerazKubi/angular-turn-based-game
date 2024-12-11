@@ -1,0 +1,41 @@
+<div
+    [ngClass]="{
+        'enemyContainer': character.isEnemy,
+        'playerContainer': !character.isEnemy,
+        'blink': isBlinking,
+        'selectAsTarget': isTargetSelectable,
+        'highlight-all': isHighlightAll
+    }"
+    (click)="onClick()"
+    (mouseenter)="onMouseEnter()"
+    (mouseleave)="onMouseLeave()"
+    >
+    <div class="name">
+        {{ character.name }}
+    </div>
+    <div class="hpContainer">
+        <div class="maxHpBar">
+            <div class="currentHpBar" 
+                [ngStyle]="{'width': getHpBarWidth() + '%' }"
+                ></div>
+        </div>
+        <div>{{ character.currentHp }} / {{ character.maxHp}}</div>
+    </div>
+    <div class="cpContainer" *ngIf="!character.isEnemy">
+        <div class="maxCpBar">
+            <div class="currentCpBar" 
+                [ngStyle]="{'width': getCpBarWidth() + '%' }"
+                ></div>
+        </div>
+        <div>{{ character.currentHp }} / {{ character.maxHp}}</div>
+    </div>
+
+    
+    <div class="status-effects">
+        <div *ngFor="let effect of character.statusEffects">
+            {{ effect.name }} ({{ effect.duration }})
+        </div>
+    </div>
+
+    
+</div>

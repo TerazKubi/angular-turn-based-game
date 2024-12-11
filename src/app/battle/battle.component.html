@@ -1,0 +1,106 @@
+<p>battle</p>
+<div class="battleContainer">
+    <div class="turnOrderContainer">
+        <div *ngFor="let character of displayedTurnOrder">
+            {{ character.name }}
+        </div>
+    </div>
+
+    <div class="enemiesContainer">
+        <app-battle-character 
+            *ngFor="let enemy of enemies; let i = index"
+            [character]="enemy"
+            [currentHp]="enemy.currentHp"
+            (targetSelected)="onTargetSelected($event)"
+            >
+            
+
+        </app-battle-character>
+    </div>
+
+    <div class="playersContainer">
+        <app-battle-character *ngFor="let ally of allies; let i = index"
+        [character]="ally"
+        [currentHp]="ally.currentHp"
+        (targetSelected)="onTargetSelected($event)"
+        >
+
+        </app-battle-character>
+    </div>
+
+
+    <app-action-hud *ngIf="gameService.getState() === GameState.ChooseAction && !currentTurn.isEnemy"
+        [character]="currentTurn"
+        >
+
+    </app-action-hud>
+
+        
+
+
+        
+            
+            
+            <!--
+
+            <div *ngIf="!currentTurn.isEnemy" >
+                
+                <div class="hudOptionsContainer">
+                    <div *ngFor="let option of hudOptions"
+                        class="hudOption"
+                        [ngClass]="{'hudOptionSelected' : option === activeHudOption}"
+                        (click)="selectHudOption(option)">
+                        <span>{{ option }}</span>
+                    </div>
+                </div>
+
+                <div *ngIf="activeHudOption === 'skills' && !selectedSkill" class="skillsContainer">
+                    <div *ngFor="let skill of currentTurn.skills" 
+                        class="skill"
+                        
+                        [ngClass]="skill.currentCooldown > 0 || currentTurn.currentCp < skill.cost ? 'skillDisabled' : 'skillHover'"
+                        (click)="skill.currentCooldown === 0 && skill.cost <= currentTurn.currentCp ? selectSkill(skill) : null">
+
+                        {{ skill.name }} - {{ skill.value }}  <span *ngIf="skill.currentCooldown > 0"> - {{ skill.currentCooldown}}/{{ skill.cooldown}} </span> 
+                    </div>
+                </div>
+
+                <div *ngIf="activeHudOption === 'attack'">
+                    <h3>Select an enemy target</h3>
+                    
+                    <div class="targetsContainer">
+                        <div *ngFor="let target of aliveEnemies"
+                        class="target hoverTarget"
+                        (click)="selectTarget(target, true)"
+                        >
+                            {{ target.name}} - HP: {{ target.currentHp }} / {{ target.maxHp }}
+                        </div>
+                    </div>
+
+                        
+                    
+                </div>
+
+                <div *ngIf="selectedSkill">
+                    <h3>Select an enemy target</h3>
+                    <button (click)="unselectSkill()">Go back</button>
+                    <div *ngIf="selectedSkill.target === 'enemy' || selectedSkill.target === 'enemyTeam'"
+                    [ngClass]="{ 'hoverAllTargets': selectedSkill.target === 'enemyTeam'}"
+                    class="targetsContainer">
+
+                        <div *ngFor="let target of aliveEnemies"
+                        class="target hoverTarget"
+                        (click)="selectTarget(target)"
+                        >
+                            {{ target.name}} - HP: {{ target.currentHp }} / {{ target.maxHp }}
+                        </div>
+                    </div>
+
+                    
+
+                </div> -->
+
+    
+    
+</div>
+
