@@ -10,14 +10,16 @@ export class GameService {
     private currentState = new BehaviorSubject<GameState>(GameState.CheckBattleOver);
     public state$ = this.currentState.asObservable();
 
-    private skillSubject = new BehaviorSubject<Skill | null>(null); // Current chosen skill
-    private targetSelectionMode = new BehaviorSubject<boolean>(false); // Whether target selection is active
+    private actionSubject = new BehaviorSubject<string | null>(null)
+    private skillSubject = new BehaviorSubject<Skill | null>(null)
+    private targetSelectionMode = new BehaviorSubject<boolean>(false)
 
-    skill$ = this.skillSubject.asObservable();
-    targetSelectionMode$ = this.targetSelectionMode.asObservable();
+    action$ = this.actionSubject.asObservable()
+    skill$ = this.skillSubject.asObservable()
+    targetSelectionMode$ = this.targetSelectionMode.asObservable()
 
-    private isHoveringTeam = new BehaviorSubject<boolean>(false);
-    isHoveringTeam$ = this.isHoveringTeam.asObservable();
+    private isHoveringTeam = new BehaviorSubject<boolean>(false)
+    isHoveringTeam$ = this.isHoveringTeam.asObservable()
 
     constructor() {}
 
@@ -29,14 +31,26 @@ export class GameService {
         return this.currentState.getValue();
     }
 
+    chooseAction(action: string | null): void {
+        this.actionSubject.next(action)
+    }
+    clearAction(): void {
+        this.actionSubject.next(null)
+        this.setTargetSelectionMode(false)
+    }
+
+    setTargetSelectionMode(isSelectingTarget: boolean): void {
+        this.targetSelectionMode.next(isSelectingTarget);
+    }
+
     chooseSkill(skill: Skill): void {
         this.skillSubject.next(skill);
-        this.targetSelectionMode.next(true); // Enable target selection mode
+         // Enable target selection mode
     }
     
     clearSkill(): void {
         this.skillSubject.next(null);
-        this.targetSelectionMode.next(false);
+        this.setTargetSelectionMode(false)
         this.setHoveringTeam(false)
     }
 

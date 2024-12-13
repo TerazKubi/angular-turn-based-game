@@ -3,6 +3,7 @@ import { Character, Skill } from '../models/character';
 import { CommonModule } from '@angular/common';
 import { BattleAction } from '../models/battleAction';
 import { GameService } from '../services/battleService.service';
+import { GameState } from '../models/gameState';
 
 
 @Component({
@@ -14,7 +15,8 @@ import { GameService } from '../services/battleService.service';
 })
 export class ActionHudComponent {
   @Input() character!: Character
-
+  sub: any = null
+  
   battleActions: string[] = ['Weapon attack', 'Skills', 'Items', 'Meditate', 'Run']
   activeAction: string | null = null
 
@@ -22,16 +24,38 @@ export class ActionHudComponent {
 
   constructor(private gameService: GameService) {}
 
+  ngOnInit(): void {
+    this.sub = this.gameService.state$.subscribe((state) => {
+      if(state === GameState.ChooseAction) 
+        this.selectedSkill = null
+        this.character.skills.forEach(s => s.selected = false)
+    })
+  }
+
   selectAction(action: string | null = null): void {
     if (!action) {
       this.selectedSkill = null
+      this.activeAction = null
       this.character.skills.forEach(s => s.selected = false)
       this.gameService.clearSkill()
+      this.gameService.clearAction()
+      return
     }
+
+    
     this.activeAction = action
+    this.gameService.chooseAction(action)
+    
+    if(action === 'Weapon attack'){
+      this.gameService.setTargetSelectionMode(true)
+    }
+    
   }
 
   selectSkill(skill: Skill): void{
+    if( (skill.cost > this.character.currentCp && skill.costType === 'cp') || skill.currentCooldown > 0) 
+      return
+
     let skills = this.character.skills
 
     skills.forEach(s => s.selected = false)
@@ -45,6 +69,10 @@ export class ActionHudComponent {
     this.gameService.chooseSkill(skill)
     
       
+  }
+
+  ngOnDestroy(): void{
+    this.sub.unsubscribe()
   }
 
 }

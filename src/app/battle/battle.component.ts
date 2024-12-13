@@ -34,15 +34,19 @@ export class BattleComponent {
 
   displayedTurnOrder: Character[] = []
 
-  activeSkillIndex = 0
+  // activeSkillIndex = 0
   selectedSkill: Skill | null = null
 
+  chosenAction: string | null = null
   chosenSkill: Skill | null = null;
   target: Character | null = null
 
   hudOptions: string[] = ['skills', 'attack']
   activeHudOption: string = this.hudOptions[0]
 
+  gameStateSub: any
+  skillSub: any
+  actionSub: any
 
   constructor(private router: Router, public gameService: GameService, private cdr: ChangeDetectorRef) {
     const navigation = this.router.getCurrentNavigation()
@@ -81,14 +85,26 @@ export class BattleComponent {
   }
 
   ngOnInit(): void{
-    this.gameService.state$.subscribe((state) => {
+    this.gameStateSub = this.gameService.state$.subscribe((state) => {
       this.handleState(state);
     })
 
-    this.gameService.skill$.subscribe((skill) => {
+    this.skillSub = this.gameService.skill$.subscribe((skill) => {
       this.chosenSkill = skill;
     })
+
+    this.actionSub = this.gameService.action$.subscribe((action) => {
+      this.chosenAction = action
+      console.log("action: ", action)
+    })
     
+  }
+
+  ngOnDestroy(){
+    console.log("skibidi sigma")
+    this.gameStateSub.unsubscribe()
+    this.actionSub.unsubscribe()
+    this.skillSub.unsubscribe()
   }
 
   handleState(state: GameState): void {
@@ -114,9 +130,9 @@ export class BattleComponent {
   checkBattleOver(): void {
     console.log('STATE - check battle over')
     // Logic to check if the battle is over
-    const isOver = false; // Replace with actual logic
+    const isOver = this.isBattleFinished()
     if (isOver) {
-      alert('Battle Over!');
+      this.handleFinishedBattle()
     } else {
       this.gameService.setState(GameState.ChooseNextCharacter);
     }
@@ -148,10 +164,13 @@ export class BattleComponent {
     let skill = this.currentTurn.skills.find( s => s.currentCooldown === 0)
 
     if(!skill){
-      return
+      const target = this.allies.find((ally) => ally.currentHp > 0)
+      this.target = target!
+      this.chosenAction = 'Weapon attack'
+      // this.weaponAttack(target!)
+      
     }
-
-    if(skill.type === 'damage') {
+    else if(skill.type === 'damage') {
       if (skill.target === 'enemy' || skill.target === 'enemyTeam') {
         const target = this.allies.find((ally) => ally.currentHp > 0)
         this.chosenSkill = skill
@@ -165,27 +184,36 @@ export class BattleComponent {
 
   async executeAction(): Promise<void> {
     console.log('STATE - execute action')
-    // Logic to execute the chosen action
 
-    // console.log('Skill:', this.chosenSkill)
-    // console.log('Target:', this.target)
-
-    if(this.chosenSkill === null || this.target === null) {
-      console.log("No target or skill")
-      return 
-    }
+    console.log('Skill:', this.chosenSkill)
+    console.log('Action:', this.chosenAction)
+    console.log('Target:', this.target)
 
     let skill = this.chosenSkill
     let target = this.target
 
+    if(target === null) {
+      console.log("No target")
+      return 
+    }
 
-    if (skill.target === 'enemy') this.useSkill([target], skill)
+    
 
-    if (skill.target === 'enemyTeam') this.useSkill(this.aliveEnemies, skill)
+    if (this.chosenAction === 'Weapon attack') this.weaponAttack(target)
 
-    if (skill.target === 'self' || skill.target === 'teamMember' ) this.useSkill([target], skill)
+    if (this.chosenAction === 'Skills' && skill) {
 
-    if (skill.target === 'team') this.useSkill(this.aliveAllies, skill)
+      if (skill.target === 'enemy') this.useSkill([target], skill)
+
+      if (skill.target === 'enemyTeam') this.useSkill(this.aliveEnemies, skill)
+  
+      if (skill.target === 'self' || skill.target === 'teamMember' ) this.useSkill([target], skill)
+  
+      if (skill.target === 'team') this.useSkill(this.aliveAllies, skill)
+    }
+
+
+    
 
     await wait(1.3)
     this.gameService.setState(GameState.CheckBattleOver);
@@ -203,11 +231,8 @@ export class BattleComponent {
   }
 
   onTargetSelected(target: any): void {
-    // console.log('Skill:', this.chosenSkill);
-    // console.log('Target:', target);
 
     this.target = target
-
     this.gameService.setState(GameState.ExecuteAction);
   }
 
@@ -230,43 +255,32 @@ export class BattleComponent {
     }
   }
 
-  selectSkill(skill: Skill): void{
-    if(!this.currentTurn.skills) return
-    let skills = this.currentTurn.skills
+  
 
-    skills.forEach(s => s.selected = false)
-    skill.selected = true
+  // selectTarget(target: Character, weaponAttack: boolean = false): void {
+  //   if(weaponAttack){
+  //     this.weaponAttack(target)
+  //     return
+  //   }
+  //   if(!this.selectedSkill) return 
 
-    this.selectedSkill = skill
-    
-    console.log(this.selectedSkill)
-  }
+  //   let skill = this.selectedSkill
 
-  selectTarget(target: Character, weaponAttack: boolean = false): void {
-    if(weaponAttack){
-      this.weaponAttack(target)
-      return
-    }
-    if(!this.selectedSkill) return 
+  //   if (skill.target === 'enemy') this.useSkill([target], skill)
 
-    let skill = this.selectedSkill
+  //   if (skill.target === 'enemyTeam') this.useSkill(this.aliveEnemies, skill)
 
-    if (skill.target === 'enemy') this.useSkill([target], skill)
+  //   if (skill.target === 'self' || skill.target === 'teamMember' ) this.useSkill([target], skill)
 
-    if (skill.target === 'enemyTeam') this.useSkill(this.aliveEnemies, skill)
+  //   if (skill.target === 'team') this.useSkill(this.aliveAllies, skill)
 
-    if (skill.target === 'self' || skill.target === 'teamMember' ) this.useSkill([target], skill)
+  // }
 
-    if (skill.target === 'team') this.useSkill(this.aliveAllies, skill)
-
-  }
-
-  async heal(target: Character, value: number) : Promise<void>{
-
+  heal(target: Character, value: number) : void{
     target.currentHp = Math.min(target.currentHp + value, target.maxHp)
-      
-    // await wait(1.5)
-    // if(!targets[0].isEnemy) this.nextTurn()
+  }
+  recoverCp(target: Character, value: number): void {
+    target.currentCp = Math.min(target.currentCp + value, target.maxCp)
   }
 
   useSkill(targets: Character[], skill: Skill): void {
@@ -316,11 +330,10 @@ export class BattleComponent {
     
   }
 
-  async weaponAttack(target: Character) {
+  weaponAttack(target: Character) {
     console.log(this.currentTurn.name, ' recovers CP')
-    this.currentTurn.currentCp = Math.min(this.currentTurn.maxCp, this.currentTurn.currentCp + Math.floor(this.currentTurn.maxCp * 0.2))
-    await this.dealDamage(target, this.currentTurn.baseDmg, this.currentTurn.critChance)
-    
+    this.recoverCp(this.currentTurn, Math.floor(this.currentTurn.maxCp * 0.2))
+    this.dealDamage(target, this.currentTurn.baseDmg, this.currentTurn.critChance)  
   }
 
   
@@ -347,20 +360,17 @@ export class BattleComponent {
     if (this.allies.every((ally) => ally.currentHp <= 0)) return true
     return false
   }
-
   getHpBarWidth(character: Character): number{
     return (character.currentHp / character.maxHp) * 100
   }
   getCpBarWidth(character: Character): number{
     return (character.currentCp / character.maxCp) * 100
   }
-
   refreshComponent():void {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate([this.router.url])
     })
   }
-
   updateDisplayedTurnOrder(turnOrder: Character[]): void{
     let tmp = turnOrder
     
@@ -373,7 +383,32 @@ export class BattleComponent {
 
   }
 
-  
+  handleFinishedBattle(): void{
+    let isPlayerWin = false
+    if (this.enemies.every((enemy) => enemy.currentHp <= 0)) isPlayerWin=true
+    if (this.allies.every((ally) => ally.currentHp <= 0)) isPlayerWin=false
+
+    if(isPlayerWin){
+      this.battleIndex += 1
+      if(this.battles[this.battleIndex]) {
+        this.enemies = this.battles[this.battleIndex].enemies
+
+        this.turnOrder = [...this.enemies, ...this.allies].sort((a, b) => b.speed - a.speed)
+        this.displayedTurnOrder = this.turnOrder
+
+        this.turnIndex = -1
+
+        this.gameService.setState(GameState.CheckBattleOver)
+
+      } else {
+        console.log('u win')
+        this.refreshComponent()
+      }
+    } else {
+      console.log('u lost')
+      this.refreshComponent()
+    }
+  }
 
   
 }

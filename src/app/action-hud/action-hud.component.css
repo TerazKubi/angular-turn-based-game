@@ -27,3 +27,6 @@
 .skillSelected{
     border: 1px solid green;
 }
+.skillDisabled{
+    background-color: rgb(59, 59, 59);
+}

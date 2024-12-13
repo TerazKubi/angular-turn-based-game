@@ -24,12 +24,20 @@
     <div class="actionsContainer" *ngIf="activeAction === 'Skills'">
         <button (click)="selectAction()">Go back</button>
         <div *ngFor="let skill of character.skills"
-            [ngClass]="{'skillSelected': skill.selected}"
+            [ngClass]="{
+                'skillSelected': skill.selected,
+                'skillDisabled': skill.currentCooldown > 0 || (character.currentCp < skill.cost && skill.costType === 'cp')
+                }"
             class="action"
             (click)="selectSkill(skill)"
             >
-            {{ skill.name }}
+            {{ skill.name }} <span *ngIf="skill.currentCooldown > 0"> {{ skill.currentCooldown }} / {{ skill.cooldown }}</span>
         </div>
+    </div>
+
+    <div class="actionsContainer" *ngIf="activeAction === 'Weapon attack'">
+        <button (click)="selectAction()">Go back</button>
+        <p>Select target</p>
     </div>
 
 </div>
