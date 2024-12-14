@@ -112,3 +112,23 @@
     /* animation: blink 0.5s ease-in-out; */
     animation: blink 0.3s steps(1, start) infinite;
 }
+
+
+@keyframes sprite-animation {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -192px 0; /* Total width of the sprite sheet */
+    }
+}
+
+.sprite-animation {
+    width: 24px; /* Frame width */
+    height: 32px; /* Frame height */
+    background: url('/assets/sprites/burning_loop_1.png') no-repeat;
+    animation: sprite-animation 1s steps(8) infinite; /* number in steps() is frames in the sheet */
+
+    transform: scale(2); /* Scale the animation 2x */
+    transform-origin: center; /* Scale from the center */
+}

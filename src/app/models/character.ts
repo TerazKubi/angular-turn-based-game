@@ -33,9 +33,7 @@ export interface StatusEffect {
     type: 'damage' | 'heal'
 }
 
-export interface HudOPtion {
-    name: 'attack' | 'skills'
-}
+
 
 export interface Mission {
     id: number

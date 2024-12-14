@@ -42,5 +42,13 @@
         <span *ngFor="let healValue of healNumbers" class="number heal-number">{{ healValue }}</span>
     </div>
 
+    <div class="skill-animation-container">
+        <div
+            *ngIf="currentSkillAnimation"
+            class="sprite-animation"
+            [ngClass]="currentSkillAnimation"
+        ></div>
+    </div>
+
     
 </div>

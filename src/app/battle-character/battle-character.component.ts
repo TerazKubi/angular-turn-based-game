@@ -24,7 +24,8 @@ export class BattleCharacterComponent {
 
   isBlinking: boolean = false
 
-  private currentSkill: Skill | null = null;
+  private currentSkill: Skill | null = null
+  currentSkillAnimation: string | null = null
 
   constructor(private gameService: GameService) {}
 
@@ -44,7 +45,10 @@ export class BattleCharacterComponent {
       if (diffValue > 0) {
         // console.log('damage')
         this.triggerBlink()
-        if(this.character.hpChange) this.showNumberAnimation(this.character.hpChange * -1, this.damageNumbers)
+        if(this.character.hpChange) {
+          this.showNumberAnimation(this.character.hpChange * -1, this.damageNumbers)
+          this.playSpriteAnimation('sprite-animation')
+        }
       }
       if (diffValue < 0) {
         // console.log('heal')
@@ -77,7 +81,10 @@ export class BattleCharacterComponent {
     })
 
     this.gameService.action$.subscribe((action) => {
-      if (action === 'Weapon attack' && this.character.isEnemy) this.isTargetSelectable = true
+      if (action === 'Weapon attack' && this.character.isEnemy) {
+        this.isTargetSelectable = true
+        this.isHighlightAll = false
+      }
     })
 
     this.gameService.isHoveringTeam$.subscribe((isHovering) => {
@@ -130,6 +137,15 @@ export class BattleCharacterComponent {
     setTimeout(() => {
       numbers.shift()
     }, 1000)
+  }
+
+  playSpriteAnimation(animationClass: string) {
+    this.currentSkillAnimation = animationClass;
+
+    // Remove the animation class after the animation completes
+    setTimeout(() => {
+      this.currentSkillAnimation = null;
+    }, 1000); // Match the CSS animation duration
   }
 
 }

@@ -49,6 +49,10 @@ export class ActionHudComponent {
     if(action === 'Weapon attack'){
       this.gameService.setTargetSelectionMode(true)
     }
+
+    if(action === 'Meditate'){
+      this.gameService.setState(GameState.ExecuteAction)
+    }
     
   }
 

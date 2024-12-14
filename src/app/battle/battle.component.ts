@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Enemy } from '../models/enemy';
 import { Player } from '../models/player';
-import { Character, HudOPtion, Skill, Battle } from '../models/character';
+import { Character, Skill, Battle } from '../models/character';
 
 import { reduceCooldowns, wait } from '../utils/battle.utils';
 import { GameService } from '../services/battleService.service';
@@ -41,8 +41,8 @@ export class BattleComponent {
   chosenSkill: Skill | null = null;
   target: Character | null = null
 
-  hudOptions: string[] = ['skills', 'attack']
-  activeHudOption: string = this.hudOptions[0]
+  // hudOptions: string[] = ['skills', 'attack']
+  // activeHudOption: string = this.hudOptions[0]
 
   gameStateSub: any
   skillSub: any
@@ -80,7 +80,7 @@ export class BattleComponent {
     } else {
       //No data passed to the Battle component. Redirecting to Missions.
       console.log('No data passed to the Battle component. Redirecting to Missions.')
-      this.router.navigate(['/missions'])
+      this.router.navigate(['missions'])
     }
   }
 
@@ -147,6 +147,8 @@ export class BattleComponent {
 
     console.log("   ", this.currentTurn.name)
 
+    this.updateDisplayedTurnOrder(this.turnOrder)
+
     this.gameService.setState(GameState.ApplyStatusEffects);
   }
 
@@ -158,9 +160,10 @@ export class BattleComponent {
 
   chooseAction(): void {
     console.log('STATE - choose action')
-    // Display UI for choosing an action
+    // if player - return from this function
     if(!this.currentTurn.isEnemy) return
 
+    //enemy actions
     let skill = this.currentTurn.skills.find( s => s.currentCooldown === 0)
 
     if(!skill){
@@ -192,6 +195,8 @@ export class BattleComponent {
     let skill = this.chosenSkill
     let target = this.target
 
+    if (this.chosenAction === 'Meditate') this.recoverCp(this.currentTurn, Math.floor(this.currentTurn.maxCp * 0.5))
+
     if(target === null) {
       console.log("No target")
       return 
@@ -200,6 +205,8 @@ export class BattleComponent {
     
 
     if (this.chosenAction === 'Weapon attack') this.weaponAttack(target)
+
+    if (this.chosenAction === 'Meditate') this.recoverCp(this.currentTurn, Math.floor(this.currentTurn.maxCp * 0.5))
 
     if (this.chosenAction === 'Skills' && skill) {
 
@@ -367,9 +374,11 @@ export class BattleComponent {
     return (character.currentCp / character.maxCp) * 100
   }
   refreshComponent():void {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([this.router.url])
-    })
+    // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+    //   console.log('refresh====================')
+    //   this.router.navigate([this.router.url])
+    // })
+    this.router.navigate(['/missions'])
   }
   updateDisplayedTurnOrder(turnOrder: Character[]): void{
     let tmp = turnOrder
@@ -380,7 +389,6 @@ export class BattleComponent {
     tmp = [...after, ...before]
     tmp = tmp.filter(character => character.currentHp > 0)
     this.displayedTurnOrder = tmp
-
   }
 
   handleFinishedBattle(): void{
