@@ -22,15 +22,19 @@ export interface Skill {
     costType: 'hp' | 'cp'
     type: 'damage' | 'heal' | 'buff' | 'debuff'
     target: 'self' | 'enemy' | 'team' | 'enemyTeam' | 'teamMember'
+    hitChance?: number
     selected?: boolean
     effect?: StatusEffect
+    applyChance?: number
 }
 
 export interface StatusEffect {
-    name: string              // Nazwa efektu (np. "Podpalenie", "Ogłuszenie")
-    duration: number           // Liczba tur do wygaśnięcia
+    name: string              
+    duration: number           
     value: number
-    type: 'damage' | 'heal'
+    procChance: number
+    triggerTiming: 'start' | 'end' 
+    type: 'damage' | 'heal' | 'stun'
 }
 
 

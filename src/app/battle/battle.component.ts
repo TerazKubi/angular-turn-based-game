@@ -34,15 +34,12 @@ export class BattleComponent {
 
   displayedTurnOrder: Character[] = []
 
-  // activeSkillIndex = 0
   selectedSkill: Skill | null = null
 
   chosenAction: string | null = null
   chosenSkill: Skill | null = null;
   target: Character | null = null
 
-  // hudOptions: string[] = ['skills', 'attack']
-  // activeHudOption: string = this.hudOptions[0]
 
   gameStateSub: any
   skillSub: any
@@ -295,6 +292,14 @@ export class BattleComponent {
 
     if ( skill.costType === 'cp') this.currentTurn.currentCp -= skill.cost
     if ( skill.costType === 'hp') this.dealDamage(this.currentTurn, skill.cost)
+
+    if (skill.hitChance) {
+      let hit = Math.random() * 100 < skill.hitChance
+      if (hit) {
+        console.log('skill missed')
+        return
+      }
+    }
 
     if(skill.type === 'damage') {
       let isCriticalHit = Math.random() * 100 < this.currentTurn.critChance;

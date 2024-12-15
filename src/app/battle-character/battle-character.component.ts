@@ -14,6 +14,8 @@ export class BattleCharacterComponent {
   @Input() character!: Character
   @Input() currentHp!: number
 
+  @Input() currentTurn!: Character | null
+
   @Output() targetSelected = new EventEmitter<any>()
 
   isTargetSelectable: boolean = false;
@@ -47,12 +49,16 @@ export class BattleCharacterComponent {
         this.triggerBlink()
         if(this.character.hpChange) {
           this.showNumberAnimation(this.character.hpChange * -1, this.damageNumbers)
-          this.playSpriteAnimation('sprite-animation')
+          
         }
       }
       if (diffValue < 0) {
         // console.log('heal')
         this.showNumberAnimation(diffValue * -1, this.healNumbers)
+      }
+
+      if(this.currentSkill){
+        this.playSpriteAnimation('sprite-animation')
       }
     }
   }
@@ -73,7 +79,12 @@ export class BattleCharacterComponent {
       else if( !this.character.isEnemy && (skill.target === 'teamMember' || skill.target === 'team')){
         this.isTargetSelectable = true
 
-      } else {
+      
+      }
+      else if(!this.character.isEnemy && skill.target === 'self' && this.currentTurn?.name === this.character.name) {
+        this.isTargetSelectable = true
+      }
+      else {
         
         this.isTargetSelectable = false
       }

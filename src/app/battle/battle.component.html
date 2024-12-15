@@ -11,6 +11,7 @@
             *ngFor="let enemy of enemies; let i = index"
             [character]="enemy"
             [currentHp]="enemy.currentHp"
+            [currentTurn]="currentTurn"
             (targetSelected)="onTargetSelected($event)"
             >
             
@@ -22,6 +23,7 @@
         <app-battle-character *ngFor="let ally of allies; let i = index"
         [character]="ally"
         [currentHp]="ally.currentHp"
+        [currentTurn]="currentTurn"
         (targetSelected)="onTargetSelected($event)"
         >
 
