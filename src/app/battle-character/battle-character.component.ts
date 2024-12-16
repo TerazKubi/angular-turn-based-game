@@ -27,6 +27,8 @@ export class BattleCharacterComponent {
   isBlinking: boolean = false
 
   private currentSkill: Skill | null = null
+  private currentAction: string | null = null
+
   currentSkillAnimation: string | null = null
 
   constructor(private gameService: GameService) {}

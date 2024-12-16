@@ -25,7 +25,7 @@ export interface Skill {
     hitChance?: number
     selected?: boolean
     effect?: StatusEffect
-    applyChance?: number
+    effectApplyChance?: number
 }
 
 export interface StatusEffect {
@@ -35,6 +35,7 @@ export interface StatusEffect {
     procChance: number
     triggerTiming: 'start' | 'end' 
     type: 'damage' | 'heal' | 'stun'
+    onSelf?: boolean
 }
 
 

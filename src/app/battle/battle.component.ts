@@ -112,14 +112,17 @@ export class BattleComponent {
       case GameState.ChooseNextCharacter:
         this.chooseNextCharacter()
         break
-      case GameState.ApplyStatusEffects:
-        this.applyStatusEffects()
+      case GameState.ApplyStartStatusEffects:
+        this.applyStartStatusEffects()
         break
       case GameState.ChooseAction:
         this.chooseAction()
         break
       case GameState.ExecuteAction:
         this.executeAction()
+        break
+      case GameState.ApplyEndStatusEffects:
+        this.applyEndStatusEffects()
         break
     }
   }
@@ -145,14 +148,33 @@ export class BattleComponent {
     console.log("   ", this.currentTurn.name)
 
     this.updateDisplayedTurnOrder(this.turnOrder)
+    this.selectedSkill = null
+    reduceCooldowns(this.currentTurn)
 
-    this.gameService.setState(GameState.ApplyStatusEffects);
+    this.gameService.setState(GameState.ApplyStartStatusEffects);
   }
 
-  applyStatusEffects(): void {
-    console.log('STATE - apply status')
+  async applyStartStatusEffects(): Promise<void> {
+    console.log('STATE - apply start status')
     // Logic to apply status effects
-    this.gameService.setState(GameState.ChooseAction);
+
+    let isStunned = await this.processStatusEffects(this.currentTurn, 'start')
+
+    console.log("stuned?: ", isStunned)
+
+    if(isStunned) this.gameService.setState(GameState.ApplyEndStatusEffects)
+    else this.gameService.setState(GameState.ChooseAction)
+
+    
+  }
+
+  applyEndStatusEffects(): void {
+    console.log('STATE - apply end status')
+    // Logic to apply status effects
+
+    this.processStatusEffects(this.currentTurn, 'end')
+
+    this.gameService.setState(GameState.CheckBattleOver);
   }
 
   chooseAction(): void {
@@ -192,6 +214,8 @@ export class BattleComponent {
     let skill = this.chosenSkill
     let target = this.target
 
+    console.log("target from execute action", target)
+
     if (this.chosenAction === 'Meditate') this.recoverCp(this.currentTurn, Math.floor(this.currentTurn.maxCp * 0.5))
 
     if(target === null) {
@@ -203,7 +227,7 @@ export class BattleComponent {
 
     if (this.chosenAction === 'Weapon attack') this.weaponAttack(target)
 
-    if (this.chosenAction === 'Meditate') this.recoverCp(this.currentTurn, Math.floor(this.currentTurn.maxCp * 0.5))
+    // if (this.chosenAction === 'Meditate') this.recoverCp(this.currentTurn, Math.floor(this.currentTurn.maxCp * 0.2))
 
     if (this.chosenAction === 'Skills' && skill) {
 
@@ -220,7 +244,7 @@ export class BattleComponent {
     
 
     await wait(1.3)
-    this.gameService.setState(GameState.CheckBattleOver);
+    this.gameService.setState(GameState.ApplyEndStatusEffects);
   }
 
   get currentTurn(): Character {
@@ -242,43 +266,7 @@ export class BattleComponent {
 
 
 
-
-
-  setActiveSkill(character: Character): void{
-    if(!character.skills) return
-
-    for (let skill of character.skills) {
-      if (skill.currentCooldown === 0){
-
-        if (skill.type === 'damage' || skill.type === 'debuff') {
-          skill.selected = true
-        }
-
-        break
-      }
-    }
-  }
-
   
-
-  // selectTarget(target: Character, weaponAttack: boolean = false): void {
-  //   if(weaponAttack){
-  //     this.weaponAttack(target)
-  //     return
-  //   }
-  //   if(!this.selectedSkill) return 
-
-  //   let skill = this.selectedSkill
-
-  //   if (skill.target === 'enemy') this.useSkill([target], skill)
-
-  //   if (skill.target === 'enemyTeam') this.useSkill(this.aliveEnemies, skill)
-
-  //   if (skill.target === 'self' || skill.target === 'teamMember' ) this.useSkill([target], skill)
-
-  //   if (skill.target === 'team') this.useSkill(this.aliveAllies, skill)
-
-  // }
 
   heal(target: Character, value: number) : void{
     target.currentHp = Math.min(target.currentHp + value, target.maxHp)
@@ -311,13 +299,12 @@ export class BattleComponent {
       
     }
 
-    if (skill.type === 'debuff' && skill.effect){
-      for ( let target of targets) target.statusEffects.push(structuredClone(skill.effect))
-    }
+    if(!skill.effect) return
 
-    if (skill.type === 'buff' && skill.effect){
-      for ( let target of targets) target.statusEffects.push(structuredClone(skill.effect))
-    }
+    if(skill.effect.onSelf) this.applyEffectOnTarget(this.currentTurn, skill)    
+    else
+      for ( let target of targets) this.applyEffectOnTarget(target, skill)
+
     
   }
 
@@ -348,21 +335,41 @@ export class BattleComponent {
     this.dealDamage(target, this.currentTurn.baseDmg, this.currentTurn.critChance)  
   }
 
+  applyEffectOnTarget(target: Character, skill: Skill){
+    if(!skill.effectApplyChance) target.statusEffects.push(structuredClone(skill.effect!))
+    
+    let applied = Math.random() * 100 < skill.effectApplyChance!
+
+    if(applied) target.statusEffects.push(structuredClone(skill.effect!))
+  }
   
-  processStatusEffects(character: Character): Promise<void> {
+  processStatusEffects(character: Character, trigerTime: 'start' | 'end'): Promise<boolean> {
     return new Promise(async (res, rej) => {
+      let isStunned: boolean = false
+      
+
+      console.log(character.statusEffects)
+
       for (const effect of character.statusEffects) {
+        if (effect.triggerTiming !== trigerTime) continue
+
         if (effect.type === 'damage') await this.dealDamage(character, effect.value)
         if (effect.type === 'heal') await this.heal(character, effect.value)
+        if (effect.type === 'stun') {
+          let proc = Math.random() * 100 < effect.procChance
+          if (proc) isStunned = true
+        }
 
         effect.duration--
     
         if (effect.duration <= 0) {
-          console.log(`Efekt ${effect.name} na ${character.name} wygasł.`);
+          character.statusEffects = character.statusEffects.filter(effect => effect.duration > 0)
         }
+        await wait(1)
       }
-      character.statusEffects = character.statusEffects.filter(effect => effect.duration > 0)
-      res()
+      
+      
+      res(isStunned)
     })
     
   }
@@ -422,6 +429,8 @@ export class BattleComponent {
       this.refreshComponent()
     }
   }
+
+  
 
   
 }

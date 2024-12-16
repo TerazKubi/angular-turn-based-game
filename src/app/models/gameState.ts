@@ -1,7 +1,8 @@
 export enum GameState {
     CheckBattleOver,
     ChooseNextCharacter,
-    ApplyStatusEffects,
+    ApplyStartStatusEffects,
     ChooseAction,
     ExecuteAction,
+    ApplyEndStatusEffects
 }
