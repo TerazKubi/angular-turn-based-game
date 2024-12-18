@@ -26,6 +26,7 @@ export interface Skill {
     selected?: boolean
     effect?: StatusEffect
     effectApplyChance?: number
+    spriteAnimationClass?: string;
 }
 
 export interface StatusEffect {

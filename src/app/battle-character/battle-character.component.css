@@ -123,12 +123,32 @@
     }
 }
 
-.sprite-animation {
+@keyframes sprite-animation-2 {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -640px 0; /* Total width of the sprite sheet */
+    }
+}
+
+.burning-animation {
     width: 24px; /* Frame width */
     height: 32px; /* Frame height */
-    background: url('/assets/sprites/burning_loop_1.png') no-repeat;
+    background: url('/assets/sprites/skill_animations/burning_loop_1.png') no-repeat;
     animation: sprite-animation 1s steps(8) infinite; /* number in steps() is frames in the sheet */
 
     transform: scale(2); /* Scale the animation 2x */
+    transform-origin: center; /* Scale from the center */
+}
+
+.electro-skill1-animation {
+    margin-top: -50px;
+    width: 128px; /* Frame width */
+    height: 256px; /* Frame height */
+    background: url('/assets/sprites/skill_animations/electro_skill_1.png') no-repeat;
+    animation: sprite-animation-2 0.5s steps(5) forwards;
+
+    transform: scale(0.5); /* Scale the animation 2x */
     transform-origin: center; /* Scale from the center */
 }

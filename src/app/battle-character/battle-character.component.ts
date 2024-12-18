@@ -65,7 +65,7 @@ export class BattleCharacterComponent {
       // console.log("     Batlechar: ", this.currentAction)
       // console.log("     Batlechar: ", this.currentSkill)
       if(this.currentSkill){
-        this.playSpriteAnimation('sprite-animation')
+        this.playSpriteAnimation(this.currentSkill?.spriteAnimationClass || '')
       }
     }
   }
