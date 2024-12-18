@@ -44,10 +44,13 @@ export class BattleCharacterComponent {
       
         
       const diffValue = change.previousValue - change.currentValue
-      console.log('HP changed: ', 'from', change.previousValue, 'to', change.currentValue, "Dif value: ", diffValue)
+      // console.log('HP changed: ', 'from', change.previousValue, 'to', change.currentValue, "Dif value: ", diffValue)
 
       if (diffValue > 0) {
         // console.log('damage')
+
+        console.log(this.character.name, " dostał: ", this.currentAction, this.currentSkill?.name)
+
         this.triggerBlink()
         if(this.character.hpChange) {
           this.showNumberAnimation(this.character.hpChange * -1, this.damageNumbers)
@@ -59,6 +62,8 @@ export class BattleCharacterComponent {
         this.showNumberAnimation(diffValue * -1, this.healNumbers)
       }
 
+      // console.log("     Batlechar: ", this.currentAction)
+      // console.log("     Batlechar: ", this.currentSkill)
       if(this.currentSkill){
         this.playSpriteAnimation('sprite-animation')
       }
@@ -68,11 +73,13 @@ export class BattleCharacterComponent {
 
   ngOnInit(): void {
     this.gameService.skill$.subscribe((skill) => {
+      this.currentSkill = skill
+      // console.log("battle char: ", this.currentAction,this.currentSkill?.name)
+
       if(!skill){
         this.isTargetSelectable = false
         return
       } 
-      this.currentSkill = skill
 
       if(this.character.isEnemy && (skill.target === 'enemy' || skill.target === 'enemyTeam') ) {
         this.isTargetSelectable = true
@@ -94,10 +101,12 @@ export class BattleCharacterComponent {
     })
 
     this.gameService.action$.subscribe((action) => {
+      this.currentAction = action
       if (action === 'Weapon attack' && this.character.isEnemy) {
         this.isTargetSelectable = true
         this.isHighlightAll = false
       }
+      // console.log("battle char: ", this.currentAction,this.currentSkill?.name)
     })
 
     this.gameService.isHoveringTeam$.subscribe((isHovering) => {
@@ -110,7 +119,7 @@ export class BattleCharacterComponent {
   onClick(): void {
     if (this.isTargetSelectable) {
       this.targetSelected.emit(this.character); // Emit the selected target
-      this.gameService.clearSkill(); // Exit target selection mode
+      // this.gameService.clearSkill(); // Exit target selection mode
     }
   }
 

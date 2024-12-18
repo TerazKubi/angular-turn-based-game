@@ -67,6 +67,11 @@ export class ActionHudComponent {
 
     this.selectedSkill = skill
     this.chooseSkill(skill)
+
+    if(!skill){
+      this.activeAction = null
+      this.gameService.clearAction()
+    }
   }
 
   chooseSkill(skill: Skill): void {

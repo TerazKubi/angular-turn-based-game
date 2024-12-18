@@ -92,7 +92,7 @@ export class BattleComponent {
 
     this.actionSub = this.gameService.action$.subscribe((action) => {
       this.chosenAction = action
-      console.log("action: ", action)
+      // console.log("action: ", action)
     })
     
   }
@@ -160,7 +160,7 @@ export class BattleComponent {
 
     let isStunned = await this.processStatusEffects(this.currentTurn, 'start')
 
-    console.log("stuned?: ", isStunned)
+    // console.log("stuned?: ", isStunned)
 
     if(isStunned) this.gameService.setState(GameState.ApplyEndStatusEffects)
     else this.gameService.setState(GameState.ChooseAction)
@@ -168,11 +168,11 @@ export class BattleComponent {
     
   }
 
-  applyEndStatusEffects(): void {
+  async applyEndStatusEffects(): Promise<void> {
     console.log('STATE - apply end status')
     // Logic to apply status effects
 
-    this.processStatusEffects(this.currentTurn, 'end')
+    await this.processStatusEffects(this.currentTurn, 'end')
 
     this.gameService.setState(GameState.CheckBattleOver);
   }
@@ -188,14 +188,17 @@ export class BattleComponent {
     if(!skill){
       const target = this.allies.find((ally) => ally.currentHp > 0)
       this.target = target!
-      this.chosenAction = 'Weapon attack'
+      this.gameService.chooseAction('Weapon attack')
+      // this.chosenAction = 'Weapon attack'
       // this.weaponAttack(target!)
       
     }
     else if(skill.type === 'damage') {
       if (skill.target === 'enemy' || skill.target === 'enemyTeam') {
         const target = this.allies.find((ally) => ally.currentHp > 0)
-        this.chosenSkill = skill
+        // this.chosenSkill = skill
+        this.gameService.chooseAction('Skills')
+        this.gameService.chooseSkill(skill)
         this.target = target!
         
       }
@@ -213,8 +216,6 @@ export class BattleComponent {
 
     let skill = this.chosenSkill
     let target = this.target
-
-    console.log("target from execute action", target)
 
     if (this.chosenAction === 'Meditate') this.recoverCp(this.currentTurn, Math.floor(this.currentTurn.maxCp * 0.5))
 
@@ -244,6 +245,8 @@ export class BattleComponent {
     
 
     await wait(1.3)
+    this.gameService.clearAction()
+    this.gameService.clearSkill()
     this.gameService.setState(GameState.ApplyEndStatusEffects);
   }
 
@@ -330,7 +333,7 @@ export class BattleComponent {
   }
 
   weaponAttack(target: Character) {
-    console.log(this.currentTurn.name, ' recovers CP')
+    // console.log(this.currentTurn.name, ' recovers CP')
     this.recoverCp(this.currentTurn, Math.floor(this.currentTurn.maxCp * 0.2))
     this.dealDamage(target, this.currentTurn.baseDmg, this.currentTurn.critChance)  
   }
@@ -347,8 +350,7 @@ export class BattleComponent {
     return new Promise(async (res, rej) => {
       let isStunned: boolean = false
       
-
-      console.log(character.statusEffects)
+      // console.log(character.statusEffects)
 
       for (const effect of character.statusEffects) {
         if (effect.triggerTiming !== trigerTime) continue

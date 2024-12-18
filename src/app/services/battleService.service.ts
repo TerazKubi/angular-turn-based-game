@@ -43,7 +43,7 @@ export class GameService {
         this.targetSelectionMode.next(isSelectingTarget);
     }
 
-    chooseSkill(skill: Skill): void {
+    chooseSkill(skill: Skill | null): void {
         this.skillSubject.next(skill);
          // Enable target selection mode
     }
