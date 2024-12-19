@@ -3,11 +3,12 @@ import { Router } from '@angular/router';
 import { Character, Mission } from '../models/character';
 import { CommonModule } from '@angular/common';
 import { MissionService } from '../services/mission.service';
+import { BattleComponent } from "../battle/battle.component";
 
 @Component({
   selector: 'app-missions',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BattleComponent],
   templateUrl: './missions.component.html',
   styleUrl: './missions.component.css'
 })
@@ -57,6 +58,8 @@ export class MissionsComponent {
     
   ]
 
+  activeMission: Mission | null = null
+
   constructor(private router: Router, private missionService: MissionService) {}
 
   ngOnInit(): void {
@@ -74,9 +77,11 @@ export class MissionsComponent {
   startMission(missionId: number): void {
     const mission = this.missions.find((m) => m.id === missionId);
     if (mission) {
-      this.router.navigate(['/battle'], {
-        state: { allies: this.allies, battles: mission.battles }
-      })
+      // this.router.navigate(['/battle'], {
+      //   state: { allies: this.allies, battles: mission.battles }
+      // })
+      this.activeMission = mission
+      console.log(this.activeMission)
     }
   }
 

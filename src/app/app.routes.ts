@@ -7,6 +7,6 @@ import { MissionsComponent } from './missions/missions.component';
 export const routes: Routes = [
     { path: '', redirectTo: '/city', pathMatch: 'full' },
     { path: 'city', component: CityComponent},
-    { path: 'missions', component: MissionsComponent},
-    { path: 'battle', component: BattleComponent}
+    { path: 'missions', component: MissionsComponent}
+    
 ];

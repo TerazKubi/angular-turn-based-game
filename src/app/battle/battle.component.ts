@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, QueryList, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Enemy } from '../models/enemy';
@@ -21,11 +21,14 @@ import { ActionHudComponent } from '../action-hud/action-hud.component';
   styleUrl: './battle.component.css'
 })
 export class BattleComponent {
+  @Input() allies! : Character[]
+  @Input() battles! : Battle[]
+
   GameState = GameState
-  battles: Battle[] = []
+  // battles: Battle[] = []
   battleIndex: number = 0
 
-  allies: Character[] = [];
+  // allies: Character[] = [];
   enemies: Character[] = [];
 
 
@@ -45,14 +48,52 @@ export class BattleComponent {
   skillSub: any
   actionSub: any
 
-  constructor(private router: Router, public gameService: GameService, private cdr: ChangeDetectorRef) {
-    const navigation = this.router.getCurrentNavigation()
-    const state = navigation?.extras.state as { allies: Character[], battles: Battle[] }
+  
 
-    if (state){
-      this.allies = state.allies
+  constructor(private router: Router, public gameService: GameService) {
+    // console.log(this.alliesInput)
+    // console.log(this.battlesInput)
+
+    
+    // this.allies = this.alliesInput
       
-      this.battles = state.battles
+    //   this.battles = this.battlesInput
+    //   this.battles = this.battles.map((battle) => ({
+    //     ...battle,
+    //     enemies: battle.enemies.map((enemy) => ({
+    //       ...enemy,
+    //       currentHp: enemy.maxHp,
+    //       currentCp: 0,
+    //       maxCp: 0,
+    //       isEnemy: true,
+    //       statusEffects: [],
+    //       skills: enemy.skills.map( (skill) => ({
+    //         ...skill,
+    //         currentCooldown: 0
+    //       }))
+    //     }))
+    //   }))
+      
+    //   this.enemies = this.battles[this.battleIndex].enemies
+
+    //   this.turnOrder = [...this.enemies, ...this.allies].sort((a, b) => b.speed - a.speed)
+    //   this.displayedTurnOrder = this.turnOrder
+
+    
+  }
+
+  ngOnInit(): void{
+    // if(!this.state) {
+    //   console.log("no state")
+    //   this.router.navigate(['/missions'])
+    // }
+
+    // console.log(this.alliesInput)
+    // console.log(this.battlesInput)
+    
+    // this.allies = this.alliesInput
+
+    this.battles = this.battles
       this.battles = this.battles.map((battle) => ({
         ...battle,
         enemies: battle.enemies.map((enemy) => ({
@@ -73,15 +114,9 @@ export class BattleComponent {
 
       this.turnOrder = [...this.enemies, ...this.allies].sort((a, b) => b.speed - a.speed)
       this.displayedTurnOrder = this.turnOrder
+    
 
-    } else {
-      //No data passed to the Battle component. Redirecting to Missions.
-      console.log('No data passed to the Battle component. Redirecting to Missions.')
-      this.router.navigate(['missions'])
-    }
-  }
 
-  ngOnInit(): void{
     this.gameStateSub = this.gameService.state$.subscribe((state) => {
       this.handleState(state);
     })
@@ -392,7 +427,7 @@ export class BattleComponent {
     //   console.log('refresh====================')
     //   this.router.navigate([this.router.url])
     // })
-    this.router.navigate(['/missions'])
+    // this.router.navigate(['/missions'])
   }
   updateDisplayedTurnOrder(turnOrder: Character[]): void{
     let tmp = turnOrder
