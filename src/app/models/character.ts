@@ -15,6 +15,7 @@ export interface Character {
 
 export interface Skill {
     name: string
+    element: 'fire' | 'water' | 'electric' | 'wind' | 'earth' | 'physical' | 'other'
     value: number
     cooldown: number
     currentCooldown: number

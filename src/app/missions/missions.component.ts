@@ -19,21 +19,21 @@ export class MissionsComponent {
     {name: "player", maxHp: 100, currentHp: 100, maxCp: 100, currentCp: 50, baseDmg: 5, speed: 15, critChance: 50, isEnemy: false,
       statusEffects: [],
       skills: [
-        {name: "ignite", value: 10, cooldown: 5, currentCooldown: 0, type: 'debuff', target: 'enemyTeam', cost: 20, costType: 'cp',
+        {name: "ignite", element:"fire", value: 10, cooldown: 5, currentCooldown: 0, type: 'debuff', target: 'enemyTeam', cost: 20, costType: 'cp',
           effect: {name: "burn", duration: 1, value: 10, type: 'damage', procChance: 100, triggerTiming: 'start'}
         },
-        {name: "regeneration", value: 10, cooldown: 5, currentCooldown: 0, type: 'buff', target: 'team', cost: 20, costType: 'cp',
+        {name: "regeneration",element:"water", value: 10, cooldown: 5, currentCooldown: 0, type: 'buff', target: 'team', cost: 20, costType: 'cp',
           effect: {name: "regen", duration: 3, value: 10, type: 'heal', procChance: 100, triggerTiming: 'end'}
         },
-        {name: "healTeamMember", value: 20, cooldown: 5, currentCooldown: 0, type: 'heal', target: 'teamMember', cost: 20, costType: 'cp',},
-        {name: "kick", value: 25, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemy', cost: 20, costType: 'hp',},
-        {name: "healTeam", value: 5, cooldown: 5, currentCooldown: 0, type: 'heal', target: 'team', cost: 20, costType: 'cp',},
-        {name: "healself", value: 10, cooldown: 5, currentCooldown: 0, type: 'heal', target: 'self', cost: 20, costType: 'cp',},
-        {name: "fireBall", value: 10, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemy', cost: 20, costType: 'cp',
+        {name: "healTeamMember", element:"water",value: 20, cooldown: 5, currentCooldown: 0, type: 'heal', target: 'teamMember', cost: 20, costType: 'cp',},
+        {name: "kick", value: 25,element:"physical", cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemy', cost: 20, costType: 'hp',},
+        {name: "healTeam",element:"water", value: 5, cooldown: 5, currentCooldown: 0, type: 'heal', target: 'team', cost: 20, costType: 'cp',},
+        {name: "healself", element:"water", value: 10, cooldown: 5, currentCooldown: 0, type: 'heal', target: 'self', cost: 20, costType: 'cp',},
+        {name: "fireBall",element:"fire", value: 10, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemy', cost: 20, costType: 'cp',
           spriteAnimationClass: 'burning-animation',
           effect: {name: "regen", duration: 3, value: 10, type: 'heal', procChance: 100, triggerTiming: 'end', onSelf: true}
         },
-        {name: "fireExplosion", value: 10, cooldown: 5, currentCooldown: 0, hitChance: 50, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp',
+        {name: "fireExplosion", element:"fire", value: 10, cooldown: 5, currentCooldown: 0, hitChance: 50, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp',
           spriteAnimationClass: 'burning-animation',
         },
         
@@ -42,15 +42,15 @@ export class MissionsComponent {
     {name: "player2", maxHp: 100, currentHp: 100, maxCp: 100, currentCp: 50, baseDmg: 5, speed: 14,critChance: 50, isEnemy: false,
       statusEffects: [],
       skills: [
-        {name: "ignite2", value: 5, cooldown: 5, currentCooldown: 0, type: 'debuff', target: 'enemy', cost: 20, costType: 'cp', effectApplyChance: 50,
+        {name: "ignite2",element:"fire", value: 5, cooldown: 5, currentCooldown: 0, type: 'debuff', target: 'enemy', cost: 20, costType: 'cp', effectApplyChance: 50,
           spriteAnimationClass: 'burning-animation',
           effect: {name: "burn2", duration: 3, value: 5, type: 'damage', procChance: 100, triggerTiming: 'end'}
         },
-        {name: "fireFlame", value: 15, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp',},
-        {name: "electroStrike", value: 10, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp',
+        {name: "fireFlame", element:"fire", value: 15, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp',},
+        {name: "electroStrike", element:"electric", value: 10, cooldown: 5, currentCooldown: 0, type: 'damage', target: 'enemyTeam', cost: 20, costType: 'cp',
           spriteAnimationClass: 'electro-skill1-animation'
         },
-        {name: "stun", value: 0, cooldown: 5, currentCooldown: 0, type: 'debuff', target: 'enemy', cost: 20, costType: 'cp', effectApplyChance: 50,
+        {name: "stun", value: 0, element:"other", cooldown: 5, currentCooldown: 0, type: 'debuff', target: 'enemy', cost: 20, costType: 'cp', effectApplyChance: 50,
           effect: {name: "stun", duration: 3, value: 0, type: 'stun', procChance: 100, triggerTiming: 'start'}
         },
       ]

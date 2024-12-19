@@ -38,17 +38,17 @@
             {
                 "enemies": [
                     { "name": "Goblin1", "maxHp": 100, "baseDmg": 15, "speed": 10, "critChance": 2, "skills": [
-                        {"name": "Fire ball", "value": 10, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
+                        {"name": "Fire ball", "element": "fire" , "value": 10, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
                     ]}
                 ]
             },
             {
                 "enemies": [
                     { "name": "Goblin2", "maxHp": 100, "baseDmg": 15, "speed": 10, "critChance": 2, "skills": [
-                        {"name": "Fire ball", "value": 10, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
+                        {"name": "Fire ball", "element": "fire" ,"value": 10, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
                     ]},
                     { "name": "Goblin3", "maxHp": 100, "baseDmg": 15, "speed": 10, "critChance": 2, "skills": [
-                        {"name": "Fire ball", "value": 10, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
+                        {"name": "Fire ball", "element": "fire" , "value": 10, "cooldown": 3, "cost": 10, "costType": "cp", "type": "damage", "target": "enemy"}
                     ]}
                 ]
             }
